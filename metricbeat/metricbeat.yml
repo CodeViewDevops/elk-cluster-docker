@@ -1,0 +1,27 @@
+metricbeat.config.modules:
+  path: ${path.config}/config/*.yml
+  reload.period: 10s
+
+processors:
+  - add_docker_metadata: ~
+  - add_host_metadata: ~
+
+output.elasticsearch:
+  hosts: ["https://node01:9200"]
+
+setup:
+  template.settings.index:
+    number_of_shards: 1
+    number_of_replicas: 0
+  kibana.host: "https://kibana:5601"
+  setup.kibana.ssl.enabled: true
+  setup.kibana.ssl.certificate: "/usr/share/elasticsearch/config/certificate/kibana/kibana.crt"
+  setup.kibana.ssl.key: "/usr/share/elasticsearch/config/certificate/kibana/kibana.key"
+  dashboards.enabled: true
+
+logging.to_files: false
+
+monitoring:
+  enabled: true
+  elasticsearch:
+    hosts: ["https://node01:9200"]

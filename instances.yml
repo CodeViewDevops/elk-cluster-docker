@@ -1,0 +1,21 @@
+instances:
+  - name: node01
+    dns:
+      - node01 
+      - localhost
+    ip:
+      - 127.0.0.1
+
+  - name: node02
+    dns:
+      - node02
+      - localhost
+    ip:
+      - 127.0.0.1
+  
+  - name: kibana
+    dns:
+      - kibana
+      - localhost
+    ip:
+      - 127.0.0.1

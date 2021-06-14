@@ -1,0 +1,59 @@
+filebeat.registry.path: /usr/share/filebeat/data/registry
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+
+processors:
+  #- add_host_metadata: ~
+  - add_docker_metadata: ~
+  # Extract the elasticsearch logging JSON into its own subfield
+  # and put the original text message in the message field,
+  # no need for the original JSON
+  - decode_json_fields:
+      fields: "message"
+      target: "node01"
+      when.contains:
+        container.name: "node01"
+  - drop_fields:
+      fields: "message"
+      when.contains:
+        container.name: "node01"
+  - rename:
+      fields:
+        - from: "node01.message"
+          to: "message"
+      when.contains:
+        container.name: "node01"
+
+output.elasticsearch:
+  hosts: ["http://node01:9200"]
+  index: "docker"
+  #indices:
+  #  - index: "docker-java-%{+yyyy.MM}-00"
+  #    when.contains:
+  #      container.name: "java_app"
+  pipelines:
+    - pipeline: "parse_java"
+      when.contains:
+        container.name: "java_app"
+
+setup:
+  ilm:
+    enabled: true
+    rollover_alias: "docker"
+    pattern: "{now/M{yyyy.MM}}-00"
+  template:
+    pattern: "docker"
+    name: "docker"
+    settings.index:
+      number_of_shards: 1
+      number_of_replicas: 0
+
+logging.to_files: true
+
+monitoring:
+  enabled: true
+  elasticsearch:
+    hosts: ["http://node01:9200"]
