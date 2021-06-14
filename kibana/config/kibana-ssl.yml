@@ -6,6 +6,17 @@ server.name: kibana
 server.host: "0"
 elasticsearch.hosts: [ "https://node01:9200" ]
 xpack.monitoring.ui.container.elasticsearch.enabled: true
+xpack.apm.enabled: false
+xpack.license_management.enabled: false
+xpack.maps.enabled: false
+xpack.canvas.enabled: false
+xpack.logstash.enabled: false
+xpack.cloud.enabled: false
+xpack.uptime.enabled: false
+xpack.beats.enabled: false
+xpack.siem.enabled: false
+xpack.infra.enabled: false
+xpack.ml.enabled: false
 
 ## X-Pack security credentials
 elasticsearch.ssl.verificationMode: none
